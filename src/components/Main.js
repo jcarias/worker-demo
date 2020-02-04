@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
-import WebWorker from "./WorkerSetup";
-import worker from "./worker";
+import WebWorker from "../workers/WorkerSetup";
+import worker from "../workers/worker";
 
 class Main extends PureComponent {
   constructor(props) {
