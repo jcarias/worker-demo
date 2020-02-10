@@ -1,11 +1,18 @@
 import React, { PureComponent } from "react";
 import WebWorker from "../workers/WorkerSetup";
 import worker from "../workers/worker";
+import UsersList from "./UserList";
+
 
 class Main extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { worker: null, loading: false, percent: 0 };
+    this.state = {
+      worker: null,
+      loading: false,
+      percent: 0,
+      users: []
+    };
   }
 
   componentDidMount() {
@@ -32,14 +39,18 @@ class Main extends PureComponent {
         event.data instanceof Object &&
         event.data.hasOwnProperty("percentValue")
       ) {
-        this.setState({ percent: event.data.percentValue });
+        return this.setState({ percent: event.data.percentValue });
+      } if (
+        event.data instanceof Object &&
+        event.data.hasOwnProperty("userData")
+      ) {
+        console.log("users received")
+        return this.setState({ users: event.data.userData });
       } else {
-        downloadTxtFile(event.data);
-
-        this.setState({
+        return this.setState({
           loading: false,
           percent: 100
-        });
+        }, () => downloadTxtFile(event.data));
       }
     });
 
@@ -55,7 +66,7 @@ class Main extends PureComponent {
   };
 
   render() {
-    const { loading, percent } = this.state;
+    const { loading, percent, users } = this.state;
     return (
       <div>
         <div>
@@ -68,6 +79,9 @@ class Main extends PureComponent {
           </button>
         </div>
         {loading && <span>Generating data... {percent} %</span>}
+        <div style={{ padding: 16 }}>
+          <UsersList users={users} listHeight={200} />
+        </div>
       </div>
     );
   }

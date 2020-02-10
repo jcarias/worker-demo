@@ -31,7 +31,7 @@ export default () => {
 
     const users = [];
 
-    for (let i = 0; i < 2000000; i++) {
+    for (let i = 0; i < 200000; i++) {
       users.push({
         name: "Jane Doe",
         email: "jane.doe@gmail.com",
@@ -40,7 +40,10 @@ export default () => {
       });
     }
 
-    const text = createFile(users);
-    postMessage(text);
+    postMessage({ userData: users })
+
+
+    //const text = createFile(users);
+    //postMessage(text);
   });
 };
