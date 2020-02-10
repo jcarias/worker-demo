@@ -1,12 +1,11 @@
-import React, { Fragment } from 'react';
-import VirtualizedList from './VirtualizedList/VirtualizedList';
+import React, { Fragment } from "react";
+import VirtualizedList from "./VirtualizedList/VirtualizedList";
 import styled from "styled-components";
 
-
-const UsersList = ({ users, listHeight = 400 }) => {
+const UsersList = ({ users, handleRowClick, listHeight = 400 }) => {
   return (
     <Fragment>
-      <ItemRow className="header"  >
+      <ItemRow className="header">
         <span className="idCol">ID</span>
         <span className="fwCol">Name</span>
         <span className="longCol">E-Mail</span>
@@ -19,18 +18,26 @@ const UsersList = ({ users, listHeight = 400 }) => {
         renderItem={({ index, style }) => {
           const user = users[index];
           return (
-            <ItemRow key={user.id} index={index} className="item" style={style} >
+            <ItemRow
+              key={user.id}
+              index={index}
+              className={user.selected ? "itemSelected" : "item"}
+              style={style}
+              onClick={() => handleRowClick(index)}
+            >
               <span className="idCol">{user.id}</span>
               <span className="fwCol">{user.name}</span>
               <span className="longCol">{user.email}</span>
-              <span className="longCol">{new Date(user.dateJoined).toISOString()}</span>
+              <span className="longCol">
+                {new Date(user.dateJoined).toISOString()}
+              </span>
             </ItemRow>
           );
         }}
       />
     </Fragment>
   );
-}
+};
 
 const ItemRow = styled.div`
   display: flex;
@@ -38,12 +45,19 @@ const ItemRow = styled.div`
   height: 40px;
   align-items: center;
 
-  background-color: ${props => props.index % 2 === 0 ? "white" : "whitesmoke"};
-  
-  &.header{
+  background-color: ${props =>
+    props.index % 2 === 0 ? "white" : "whitesmoke"};
+
+  &.header {
     font-weight: bold;
     background-color: transparent;
-    padding-right:16px;
+    padding-right: 16px;
+  }
+
+  &.itemSelected {
+    background-color: lightgrey;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
   }
 
   span {
@@ -64,7 +78,7 @@ const ItemRow = styled.div`
 
     &.fwCol {
       width: auto;
-      flex-grow:2
+      flex-grow: 2;
     }
   }
 `;

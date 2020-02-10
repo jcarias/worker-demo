@@ -3,7 +3,6 @@ import WebWorker from "../workers/WorkerSetup";
 import worker from "../workers/worker";
 import UsersList from "./UserList";
 
-
 class Main extends PureComponent {
   constructor(props) {
     super(props);
@@ -40,17 +39,21 @@ class Main extends PureComponent {
         event.data.hasOwnProperty("percentValue")
       ) {
         return this.setState({ percent: event.data.percentValue });
-      } if (
+      }
+      if (
         event.data instanceof Object &&
         event.data.hasOwnProperty("userData")
       ) {
-        console.log("users received")
+        console.log("users received");
         return this.setState({ users: event.data.userData });
       } else {
-        return this.setState({
-          loading: false,
-          percent: 100
-        }, () => downloadTxtFile(event.data));
+        return this.setState(
+          {
+            loading: false,
+            percent: 100
+          },
+          () => downloadTxtFile(event.data)
+        );
       }
     });
 
@@ -63,6 +66,12 @@ class Main extends PureComponent {
       element.click();
       document.body.removeChild(element);
     };
+  };
+
+  toggleRowSelection = index => {
+    let newUsers = [...this.state.users];
+    newUsers[index].selected = newUsers[index].selected ? false : true;
+    this.setState({ users: newUsers });
   };
 
   render() {
@@ -80,7 +89,11 @@ class Main extends PureComponent {
         </div>
         {loading && <span>Generating data... {percent} %</span>}
         <div style={{ padding: 16 }}>
-          <UsersList users={users} listHeight={200} />
+          <UsersList
+            users={users}
+            listHeight={250}
+            handleRowClick={this.toggleRowSelection}
+          />
         </div>
       </div>
     );
